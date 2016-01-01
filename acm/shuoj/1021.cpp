@@ -19,6 +19,7 @@ int main(){
             }
         }
         queue<int>Q;
+
         Q.push(st);cnt[st] =0;
         vis[st/m][st%m] = 1;
         while(!Q.empty()){
