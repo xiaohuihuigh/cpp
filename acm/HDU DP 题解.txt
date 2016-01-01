@@ -1,0 +1,1004 @@
+HDU 1171(转换成01背包问题）
+#include<iostream>
+#include<cstring>
+using namespace std;
+int a[250005];
+int main()
+{
+    int i,j;
+    int b[55][2];
+    int t;
+    int v,n,m,sum;
+    while(scanf("%d",&t),t>=0)
+    {
+        sum=0;
+        for(i=0;i<t;i++)
+        {
+            scanf("%d %d",&b[i][0],&b[i][1]);
+            sum+=b[i][0]*b[i][1];
+        }
+        v=sum/2;
+        memset(a,0,sizeof(a));
+        for(i=0;i<t;i++)
+        {
+           for(j=0;j<b[i][1];j++)
+           {
+                for(int k=v;k>=b[i][0];k--)
+                {
+                    if(a[k]<a[k-b[i][0]]+b[i][0])
+                    a[k]=a[k-b[i][0]]+b[i][0];
+                }
+           }
+        }
+        n=a[v];
+        m=sum-n;
+        cout<<m<<' '<<n<<endl;
+    }
+    return 0;
+}
+
+
+HDU 1069(典型DP.很经典)
+//每个格子最多3个状态，也就是高最多有3种，也就是一共有N*3 最多90个格子，但是X和Y可以对调，那么就最多180个，我对180个格子对X从小到大排序，X相等，Y就重小到大排序，那么这个问题就可以转换成类似求最大递增子序列问题一样思路的DP，DP[i]表示第i个格子时的最大值，dp[i+1]就是从前i个中找符合条件的最大的一个加上去，因为，重楼必须X越来越小，反过来就是X越来越大，我已经保证了X是递增的，所以这样DP是对的！C++代码如下：
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+struct point
+{
+    int x;
+    int y;
+    int z;
+}dp[200];
+int cmp(const void *a,const void *b)
+{
+    struct point *c=(point *)a;
+    struct point *d=(point *)b;
+    if(c->x!=d->x)
+    return c->x-d->x;
+    else
+    return
+    c->y-d->y;
+}
+int main()
+{
+    int t,k=1,i,j,len;
+    int temp;
+    int maxn;
+    int xx,yy,zz;
+    while(scanf("%d",&t),t)
+    {
+        len=0;
+        while(t--)
+        {
+            scanf("%d%d%d",&xx,&yy,&zz);
+            dp[len].x=xx;
+            dp[len].y=yy;
+            dp[len].z=zz;
+            ++len;
+            dp[len].x=yy;
+            dp[len].y=zz;
+            dp[len].z=xx;
+            ++len;
+            dp[len].x=zz;
+            dp[len].y=xx;
+            dp[len].z=yy;
+            ++len;
+            dp[len].x=yy;
+            dp[len].y=xx;
+            dp[len].z=zz;
+            ++len;
+            dp[len].x=zz;
+            dp[len].y=yy;
+            dp[len].z=xx;
+            ++len;
+            dp[len].x=xx;
+            dp[len].y=zz;
+            dp[len].z=yy;
+            ++len;
+        }
+        qsort(dp,len,sizeof(dp[0]),cmp);
+        for(i=1;i<len;i++)
+        {
+            temp=0;
+            for(j=0;j<i;j++)
+            {
+                if(((dp[j].x<dp[i].x&&dp[j].y<dp[i].y)||(dp[j].x<dp[j].y&&dp[j].y<dp[j].x))&&dp[j].z>temp)
+                temp=dp[j].z;
+            }
+            dp[i].z+=temp;
+        }
+        maxn=0;
+        for(i=0;i<len;i++)
+        if(dp[i].z>maxn)
+        maxn=dp[i].z;
+        printf("Case %d: maximum height = %d\n",k++,maxn);
+    }
+    return 0;   
+}
+
+
+HDU 2159(二维费用背包问题)
+
+#include<iostream>
+using namespace std;
+struct zc
+{
+    int jy;
+    int nj;
+}guai[101];
+int dp[101][101];
+int main()
+{
+    for(int jingyan,naijiu,guaizhongshu,zuiduoshaguai;cin>>jingyan>>naijiu>>guaizhongshu>>zuiduoshaguai;)
+    {
+        memset(dp,0,sizeof dp);
+        for(int i=1;i<=guaizhongshu;i++)
+            cin>>guai[i].jy>>guai[i].nj;
+        int rest=-1;
+        for(int i=1;i<=naijiu;i++)//由于是要求剩余耐久，那么也就要看当前耐久时最多的经验，故naijiu循环应该放外层
+        {
+            for(int j=1;j<=guaizhongshu;j++)      //个人怪种数循环和最多杀怪循环的顺序可以交换，实际测试也如此
+                for(int k=1;k<=zuiduoshaguai;k++)
+                    if(i>=guai[j].nj)
+                        dp[i][k]=max(dp[i][k],dp[i-guai[j].nj][k-1]+guai[j].jy);
+            if(dp[i][zuiduoshaguai]>=jingyan)
+            {
+                rest=naijiu-i;
+                break;
+            }
+        }
+        cout<<rest<<endl;
+    }
+}
+
+HDU 1203(01背包dp)
+
+#include<iostream>
+#include<cstring>
+using namespace std;
+struct node
+{
+    int a;//费用
+    double b;//概率
+}g[1002];
+int main()
+{
+    int n,m;
+    double f[10002];
+    int i,j;
+    while(cin>>n>>m,n||m)
+    {
+        for(i=0;i<m;i++)
+        cin>>g[i].a>>g[i].b;
+        for(i=0;i<=n;i++)
+        f[i]=1;
+        for(j=0;j<m;j++)
+        for(i=n;i>=g[j].a;i--)
+        if(f[i]>f[i-g[j].a]*(1-g[j].b))
+        f[i]=f[i-g[j].a]*(1-g[j].b);
+        cout.setf(ios_base::fixed);
+        cout.precision(1);
+        cout.setf(ios_base::showpoint);
+        cout<<(1-f[n])*100<<"%"<<endl;
+    }
+    return 0;
+}
+
+HDU 1422(求最长连续非负子序列)
+
+#include<stdio.h>
+#include<iostream>
+using namespace std;
+int a[200005];
+int f[200005];
+int sum[200005];
+int main()
+{
+    int i;
+    int n;
+    int c,b;
+    int mm;
+    while(scanf("%d",&n)!=-1)
+    {
+        for(i=0;i<n;i++)
+        {
+            scanf("%d%d",&c,&b);
+            a[i]=a[n+i]=c-b;
+        }
+        for(i=0;i<2*n;i++)
+        if(a[i]>=0)
+        break;
+        if(i==2*n)
+        {
+            printf("0\n");
+            continue;
+        }
+        f[i]=1;
+        mm=1;
+        sum[i]=a[i];
+        for(++i;i<2*n;i++)
+        {
+            if(mm==n)
+            break;
+            if(sum[i-1]+a[i]>=0)
+            {
+                f[i]=f[i-1]+1;
+                sum[i]=sum[i-1]+a[i];
+                mm=max(f[i],mm);
+            }
+            else
+            {
+                sum[i]=0;
+                f[i]=0;
+            }
+        }
+        printf("%d\n",mm);
+    }
+    return 0;
+}
+
+HDU 1087(DP)
+
+#include<iostream>
+using namespace std;
+int main()
+{
+    int n;
+    int sum[1005],sum1[1005];
+    int i;
+    int max,j,bigmax;
+    while(cin>>n&&n)
+    {
+        cin>>sum1[0];
+        bigmax=sum[0]=sum1[0];
+        for(i=1;i<n;i++)
+        {
+            cin>>sum1[i];
+            sum[i]=sum1[i];
+            max=0;
+            for(j=0;j<i;j++)
+            {
+                if(sum[j]>max&&sum1[i]>sum1[j])
+                max=sum[j];
+            }
+            sum[i]+=max;
+            if(sum[i]>bigmax)
+            bigmax=sum[i];
+        }
+        cout<<bigmax<<endl;
+    }
+    return 0;
+}
+
+
+HDU 1158(Employment Planning) 
+
+#include<iostream>
+#include<cstring>
+using namespace std;
+int cost[2][1002];// cost[i][j]表示i月j人的最小花费
+int main()
+{
+    int n,i,j,k;
+    int hire,fire,salary;
+    int num[13];
+    int max,min,costmin;
+    while(cin>>n&&n)
+    {
+        cin>>hire>>salary>>fire;
+        max=0;
+        for(i=0;i<n;i++)
+        {
+            cin>>num[i];
+            if(num[i]>max)
+            max=num[i];
+        }
+        memset(cost,0,sizeof(cost));
+        min=num[0];
+        for(j=min;j<=max;j++)
+        cost[0][j]=hire*j+salary*j;
+        for(i=1;i<n;i++)
+        {
+            for(j=num[i];j<=max;j++)
+            {
+                costmin=100000000;
+                for(k=min;k<=max;k++)
+                {
+                    if(j>k)
+                    {
+                        if(((j-k)*hire+cost[(i-1)%2][k]+j*salary)<costmin)
+                        costmin=(j-k)*hire+cost[(i-1)%2][k]+j*salary;
+                    }
+                    else
+                    {
+                        if(((k-j)*fire+cost[(i-1)%2][k]+j*salary)<costmin)
+                        costmin=(k-j)*fire+cost[(i-1)%2][k]+j*salary;
+                    }
+                }
+                cost[i%2][j]=costmin;
+            }
+            min=num[i];
+        }
+        costmin=10000000;
+        for(k=min;k<=max;k++)
+        if(cost[(n-1)%2][k]<costmin)
+        costmin=cost[(n-1)%2][k];
+        cout<<costmin<<endl;
+    }
+    return 0;
+}
+
+
+HDU 1058(humble numbers) 
+
+#include<iostream>
+using namespace std;
+int a[5844]={0};
+int min(int a,int b)
+{
+    return a<b?a:b;
+}
+void num()
+{
+    int i,j,k,m,q;
+    i=j=k=m=1;
+    a[1]=1;
+    for(q=2;q<=5842;q++)
+    {
+        a[q]=min(a[i]*2,min(a[j]*3,min(a[k]*5,a[m]*7)));
+        if(a[i]*2==a[q])
+        i++;
+        if(a[j]*3==a[q])
+        j++;
+        if(a[k]*5==a[q])
+        k++;
+        if(a[m]*7==a[q])
+        m++;
+    }
+}
+int main()
+{
+    int n;
+    num();
+    while(cin>>n&&n)
+    {
+        cout<<"The "<<n;
+        if(n%10==1&&n%100!=11) cout<<"st";
+        else if(n%10==2&&n%100!=12) cout<<"nd";
+        else if(n%10==3&&n%100!=13) cout<<"rd";
+        else cout<<"th";
+        cout<<" humble number is "<<a[n]<<'.'<<endl;
+    }
+    return 0;
+}
+
+
+HDU 1081(最大连续字串和的2维算法)
+
+/化2维为一维，如何化？？ 简单举个例，对于a[2][N]的一个矩阵，对a[1][N]这行的数我们能用最大连续字串和的算法求出起其边长为1的宽度？？的一个最大矩形，同理对a[2][N]这行我们也能求出，然后比较两个数就能知道边长为1的矩形最大的是多少了，对变长为2的呢？？   叠加.....将a[2][N]这行的数对应上去叠加，不就的到一行的变长为的数么，在算一下比较，就能知道最大的和了......
+C++代码如下:
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+int n;
+int a[105][105];
+int dp[105];
+int DP(int m[])
+{
+    int max1=m[0];
+    int c[105];
+    c[0]=m[0];
+    int i;
+    for(i=1;i<n;i++)
+    {
+        if(c[i-1]>0)
+        c[i]=m[i]+c[i-1];
+        else
+        c[i]=m[i];
+        if(c[i]>max1)
+        max1=c[i];
+    }
+    return max1;
+}
+int main()
+{
+    int i,j,k;
+    while(cin>>n){
+        for(i=0;i<n;i++)
+        for(j=0;j<n;j++)
+        cin>>a[i][j];
+        int max=-10000;
+        int max1;
+        for(k=0;k<n;k++)
+        {
+            memset(dp,0,sizeof(dp));
+            for(i=k;i<n;i++)
+            {
+                for(j=0;j<n;j++)
+                dp[j]+=a[i][j];
+                max1=DP(dp);
+                if(max1>max)
+                max=max1;
+            }
+        }
+        cout<<max<<endl;
+    }
+    return 0;
+}
+
+HDU 1176(动态规划矩阵,免费馅饼)
+
+/这里用到之前我们学过的数塔模型计算的思维，只不过这是矩阵而已，思路完全一样，可以这样想，建议一个很大的矩阵A，那么A[i][j]表示第i秒第j位置有多少个馅饼，那么我把所有馅饼都填入表(矩阵中)，这样我只要从底往上走，走到最上面一层，找到所走过的位置中馅饼之数最大的那个就是我们所求结果，这完全和数塔一样的思维。
+//多提点：既然用到了动态规划，那么就必须思考动态规划的3个要素，其中子结构之间存在关系，并且那个递推关系式是很重要的，这是我们在用动态规划解决问题时候必须先思考的。
+//之前做这道题，我做得很忐忑，因为我建的矩阵用100万个空间，后面还要用循环，很怕超时，后来通过了才106MS，这使我觉得在写程序前对程序的估时很总要，如果你再比赛的时候遇到怕超时的题(本来不会超时)一直犹豫怕做了超时耽误时间，没做又不能AC这道题，这种情况你就真的太浪费比赛时间了。
+ 
+C++代码如下：
+#include<iostream>
+#include<cstring>
+using namespace std;
+int maxi(int a,int b,int c)
+{
+    int max1;
+    max1=a>b?a:b;
+    max1=max1>c?max1:c;
+    return max1;
+}
+int c[100001][11];
+int main()
+{
+    int i,j;
+    int n,a,b;
+    while(cin>>n&&n)
+    {
+        int m=0;
+        memset(c,0,sizeof(c));
+        for(i=0;i<n;i++)
+        {
+             cin>>a>>b;
+             c[b][a]++;
+             if(m<b)
+             m=b;;
+        }
+        for(i=m-1;i>=0;i--)
+        {
+            for(j=1;j<=9;j++)
+                c[i][j]+=maxi(c[i+1][j-1],c[i+1][j],c[i+1][j+1]);
+            c[i][0]+=max(c[i+1][0],c[i+1][1]);
+            c[i][10]+=max(c[i+1][10],c[i+1][9]);
+        }
+        cout<<c[0][5]<<endl;       
+    }return 0;
+}
+
+
+带权的最大公共子序列（ZOJ 1642）
+Roy played a game with his roommates the other day.
+
+His roommates wrote 2 strings of characters, and gave each character a bonus value. When Roy pinned the positions of one common character in the 2 strings, the bonus value of that character would be added to Roy's score. However at the mean time, the 2 characters and those before them in the strings would be erased.
+
+Roy now needs your help, because he wants to know the maximum score he can get.
+
+Input
+There are several test cases.
+
+For each test case, the first line contains an integer N.
+
+The following N lines describe a list of N characters and their bonus values.
+
+Then the following 2 lines give the 2 strings.
+
+Output
+For each test case, output in one line the best score Roy can get.
+
+Sample Input
+3
+a 1
+b 1
+c 1
+abc
+bca
+3
+a 1
+b 10
+c 100
+abc
+cab
+
+Sample Output
+
+2
+100
+//这是一道带权数问题的最大公共子序列，之前我们求最大公共子序列带的权数是1，就算带上本身权数求出来的C[M][N]还是最大权数的公共子序列如果权数都是1那么最大权数公共子序列的值就可以表示其个数，如果权数不是1，那结果就是我们这道题要求的；
+//C++代码如下：
+#include<iostream>
+#include<string>
+#include<map>
+#include<cstring>
+using namespace std;
+map<char,int>S;
+int c[2][5000];
+int max(int a,int b)
+{
+    return a>b?a:b;
+}
+int main()
+{
+    int t,i,j;
+    string s1;
+    string s2;
+    char a;
+    int b;
+    while(cin>>t)
+    {
+        S.clear();
+        for(i=0;i<t;i++)
+        {
+             cin>>a>>b;
+             S[a]=b;
+        }
+        cin>>s1>>s2;
+        memset(c,0,sizeof(c));
+        for(i=1;i<=s1.size();i++)
+        {
+            for(j=1;j<=s2.size();j++)
+            {
+                c[i%2][j]=max(c[(i-1)%2][j],c[i%2][j-1]);//注意这后面为什么和以前求得不样？？？
+                if(s1[i-1]==s2[j-1])                     //因为字母的值并没有告诉你是正式负....
+                c[i%2][j]=max(c[i%2][j],c[(i-1)%2][j-1]+S[s1[i-1]]);
+            }
+        }
+        cout<<c[s1.size()%2][s2.size()]<<endl;
+    }return 0;
+}
+
+
+最长不下降子序列
+
+当我们定义问题F(i)为以bi结束的最长不下降序列时，则问题F(I)
+有I-1个子问题：F(1), F(2),…, F(I-1)。我们要使F(I)最大，则要找
+到一个F(j)最大的子问题，且同时满足Bj < Bi，这时F(I) := F(j）+1
+?? 例如F(4) 有3个子问题，分别是F(1), F(2), F(3), 它们都满足bj <
+bi的条件，而最大的F(j)=2, 因此F(4) := F(3)+1=3, 而它的前趋
+结点下标是j
+//用两个数组a[]数组存数num[]数组存这个数对应的最长不下降子序列长度
+int longest(int a[],int n)
+{
+    int num[n];
+    int i,j;
+    for(i=0;i<n;i++)
+    {
+        num[i]=1;
+        for(j=0;j<i;j++)
+        {
+            if(a[j]<a[i]&&num[j]+1>num[i])
+            num[i]=num[j]+1;
+        }
+    }
+    int max=0;
+    for(i=0;i<n;i++)
+    if(max<num[i])
+    max=num[i];
+    return max;
+}
+ 
+//下面介绍，最长不下降子序列的效率更高的算法，我们可以发现，上面求得最长不下降子序列的时间效率是  O(N*N)，那么如果N=10000，及我们的序列长度高于10000了(其实只需要高于几千)就会超时，我们可以利用单调队列的思想来求最长不下降子序列；
+//单调队列的思想就是在保证序列长度最大的情况下，使序列中的每个数最小，那么这样就能够留给后面的数更大的机会来入队，形成一个最长的序列，假设去 1 5 2 4 3 8 7 这列数的最长上升子序列，我们给一个数组   A[N]，A[0]=1；接着5和1比较如果5比1大那么A[1]=5,接着2和5比较如果2比5小，那么2就要去A数组中找到一个最接近2的数并且比2大的数覆盖，那么A[1]=2；接着A[2]=4;A[2]=3;A[3]=8;A[3]=7;那么最长上升子序列的长度就为4了；为了加大时间效率，我们在搜索的时候用2分。
+C语言代码如下：O(Nlog(N))；
+#include<stdio.h>
+#include<string.h>
+int a[max],k;
+void find(int x,int y,int b)
+{
+    int mid;
+    int f;
+    while(x<y)
+    {
+        mid=(x+y)/2;
+        if(a[mid]>=b)
+        {
+            f=mid;
+            y=mid;
+        }
+        else
+        x=mid+1;
+    }
+    if(a[x]>=b)
+    f=x;
+    a[f]=b;
+}
+int main()
+{
+    int i,n,b;
+    while(scanf("%d",&n)!=-1)
+    {
+        memset(a,0,sizeof(a));
+        k=0;
+        for(i=1;i<=n;i++)
+        {
+            scanf("%d",&b);
+            if(b>a[k])
+            a[++k]=b;
+            else
+            find(1,k,b);
+        }
+        printf("%d\n",k);
+    }
+    return 0;
+}
+
+
+
+滚动数组(一般用于DP) 
+今天做了一道DP题，开了一个int [5000][5000]的数组，OLE了，虽然可以用short [5000][5000]猥琐过,但毕竟只是特殊情况
+正确的方法是滚动数组压缩存储，整理了一下网上的资料：
+利用滚动数组的话在N很大的情况下可以达到压缩存储的作用。不过经常还是用在DP题目中，因为DP题目是一个自下而上的扩展过程，我们常常用到是连续的解，前面的解往往舍弃！所以用滚动数组可以说是很有必要的。
+ 
+滚动数组 举个简单的例子：
+int i, d[100];
+d[0] = 1;
+d[1] = 1;
+for (i = 2; i < 100; i++)
+    d[i] = d[i - 1] + d[i - 2];
+printf("%d", d[99]);
+上面这个循环d[i]只依赖于前两个数据d[i - 1]和d[i - 2];
+为了节约空间用滚动数组的做法
+int d[3];
+d[0] = 1;
+d[1] = 1;
+for (i = 2; i < 100; i++)
+    d[i % 3] = d[(i - 1) % 3] + d[(i - 2) % 3];
+printf("%d", d[99 % 3]);
+注意上面的取余运算，我们成功地只保留了需要的最后3个解，数组好象在“
+滚动”一样，所以叫滚动数组
+ 
+//DP
+对于二维也可以用（代码可能不太正确和完善，但是可以理解例子）:
+int i,j,d[100][100];
+for(i=1;i<100;i++)
+    for(j=0;j<100;j++)
+        d[i][j]=d[i-1][j]+d[i][j-1];
+ 
+上面的d[i][j]只依赖于d[i-1][j],d[i][j-1];
+运用滚动数组
+int i,,j,d[2][100];
+for(i=1;i<100;i++)
+    for(j=0;j<100;j++)
+        d[i%2][j]=d[(i-1)%2][j]+d[i%2][j-1];
+ 
+滚动数组实际是一种节省空间的办法，时间上没啥优势，多用于DP中，举个
+ 
+例子吧： 
+一个DP，平常如果需要1000×1000的空间，其实根据DP的无后效性，可以开成2×1000，然后通过滚动，获得和1000×1000一样的效果。滚动数组常用于DP之中，在DP过程中，我们在由一个状态转向另一个状态时，很可能之前存储的某些状态信息就已经无用了，例如在01背包问题中，从理解角度讲我们应开DP[i][j]的二维数组，第一维我们存处理到第几个物品，也就是阶段了，第二维存储容量，但是我们获得DP[i],只需使用DP[i - 1]的信息，DP[i - k],k>1都成了无用空间，因此我们可以将数组开成一维就行，迭代更新数组中内容，滚动数组也是这个原理，目的也一样，不过这时候的问题常常是不可能缩成一维的了，比如一个DP[i][j]需要由DP[i - 1 ][k],DP[i - 2][k]决定，i<n，0<k<=10;n <= 100000000;显然缩不成一维,正常我们应该开一个DP[100000005][11]的数组，结果很明显，超内存，其实我们只要开
+DP[3][11]就够了DP[i%3][j]由DP[(i - 1)%3][k]和DP[(i - 2)%3][k]决定，空间复杂度差别巨大。
+
+
+POJ 1159(Palindrome) Palindrome
+Time Limit: 3000MS		Memory Limit: 65536K
+Total Submissions: 37836		Accepted: 12799
+Description
+A palindrome is a symmetrical string, that is, a string read identically from left to right as well as from right to left. You are to write a program which, given a string, determines the minimal number of characters to be inserted into the string in order to obtain a palindrome.
+
+As an example, by inserting 2 characters, the string "Ab3bd" can be transformed into a palindrome ("dAb3bAd" or "Adb3bdA"). However, inserting fewer than 2 characters does not produce a palindrome.
+Input
+Your program is to read from standard input. The first line contains one integer: the length of the input string N, 3 <= N <= 5000. The second line contains one string with length N. The string is formed from uppercase letters from 'A' to 'Z', lowercase letters from 'a' to 'z' and digits from '0' to '9'. Uppercase and lowercase letters are to be considered distinct.
+Output
+Your program is to write to standard output. The first line contains one integer, which is the desired minimal number.
+Sample Input
+5 Ab3bd
+Sample Output
+2
+//这是一道求最长公共子序列的题，但是如果开一个a[5000][5000]的题，用short的话能猥琐的过了，用int就不行了，为了使程序变得更好，引用滚动数组就是必要的了；
+C++代码如下：
+#include<iostream>
+ using namespace std; 
+#include<string> 
+short a[2][5001]; 
+string s; 
+int main() 
+{
+ int n; int i,j,p; 
+while(cin>>n) 
+{ 
+getchar(); cin>>s; memset(a,0,sizeof(a)); for(i=1;i<=s.size();i++) { p=1; for(j=s.size();j>=1;j--,p++) { if(s[i-1]==s[j-1]) a[i%2][p]=a[(i-1)%2][p-1]+1; else { if(a[i%2][p-1]>=a[(i-1)%2][p]) a[i%2][p]=a[i%2][p-1]; else a[i%2][p]=a[(i-1)%2][p]; } } } cout<<n-a[n%2][n]<<endl; }return 0; }
+
+
+
+hdu1227 Fast Food（经典DP 状态方程）  
+经典的DP，用dp[i][j] 表示前j个餐馆建i个仓库 dp[i][j] = min (dp[i-1][k-1] , cost[k][j])
+
+(i <= k < j);表示在前k-1个餐馆建i-1个仓库的前提下，把第i的仓库建在k到j 的餐馆之间，这样就能保证最优！其中cost[i][j] 表示在饭店i，j之间建立一个仓库的最短距离，仓库可以通过预处理得出，如果i 到j之间要建仓库那么必定会建在下标为(i+j)/2的餐馆！dp的初始值要仔细！
+
+#include<stdio.h>
+#include<math.h> 
+#include<string.h>
+#define MAX 0x7fffffff
+int a[35][205];
+int b[205];
+int cost[205][205];
+int main()
+{
+ int n,m,i,j,k,min;
+ int h=0;
+ while(scanf("%d%d",&n,&m)!=EOF){
+  memset(a,0,sizeof(a));
+  if(n==0&&m==0) break;
+  h++;
+  for(i=1;i<=n;i++){
+   scanf("%d",&b[i]);
+  }
+
+//对cost[i][j]进行预处理
+  for(i=1;i<=n;i++){
+   for(j=i;j<=n;j++){
+    cost[i][j]=0;
+    for(k=i;k<=j;k++){
+     cost[i][j]=cost[i][j]+abs(b[k]-b[(j+i)/2]);
+    }
+   }
+  }
+
+//当仓库只有一个时，进行初始化
+  for(i=1;i<=n;i++){
+   a[1][i]=cost[1][i];
+  }
+  for(i=2;i<=m;i++){
+   for(j=2;j<=n;j++){
+    min=MAX;
+    for(k=i;k<=j;k++){
+     if(a[i-1][k-1]+cost[k][j]<min) 
+      min=a[i-1][k-1]+cost[k][j];
+    }
+    a[i][j]=min;
+   }
+  }
+  printf("Chain %d\nTotal distance sum = %d\n\n",h,a[m][n]);
+ }
+ return 0;
+}
+
+
+
+hdu 1505 (dp)
+简单的说明一下，这是hdu 1506 的加强版，1506 是一维的，这题只不过是上一题的基础上枚举每一行而已。因此本题的思路求出以某行为矩阵的下底边，以某列的高度为矩阵的高，向左向右所能扩展的最大面积，比较求出最大的即可。
+ 
+#include<iostream>
+using namespace std;
+ 
+const int maxn=1005;
+int lefts[maxn];
+int rights[maxn];
+int height[maxn];
+ 
+__int64 area=0;
+ 
+int main()
+{
+int n,m;
+int i,j,t;
+char str[3];
+scanf("%d",&t);
+while(t--)
+{
+area=0;
+scanf("%d %d",&n,&m);
+memset(height,0,sizeof(height));
+for(j=0;j<n;j++)
+{
+for(i=0;i<m;i++)
+{
+scanf("%s",str);
+if(str[0]=='F')height[i]++;
+else height[i]=0;
+lefts[i]=rights[i]=i;
+}
+for(i=1;i<m;i++)
+{  
+while(lefts[i]&&(height[lefts[i]-1]>=height[i]))
+lefts[i]=lefts[lefts[i]-1];
+}
+for(i=m-2;i>=0;i--)
+{
+while((rights[i]<m-1)&&(height[rights[i]+1]>=height[i]))
+rights[i]=rights[rights[i]+1];
+}
+__int64 temp;
+for(i=0;i<m;i++)
+{
+temp=height[i];
+temp*=(rights[i]-lefts[i]+1);
+if(temp>area)area=temp;
+}
+}
+printf("%I64d\n",area*3);
+}
+return 0;
+}
+
+
+hdu 3652 DP
+题意：
+     这是四川网络赛的B题，题目意思很简单，求不超过n,包含数字13并能被13整除的个数.很遗憾，但是没想到是dp ,推了半天做出来。惭愧啊。最初是用稀疏表来做，但很遗憾，TLE了。最后参考别人的代码。自己再想想才AC了。太菜了。加油啊。
+思路：
+     令dp1[i][j][k] 表示在位置i (i>=0)的数字为 j(0<=j<10) 时，从j*10^i ---- (j+1)*10^i-1 ，这 10^i 个数中，包含连续数字13且模 13 的余数为k 个数。同理 dp2[i][j][k] 表示不包含连续数字13，余数为k 的个数。
+     递归方程:         9
+     dp1[i][j][kk]= Σ（dp1[i-1][t][k]）其中kk=(j*10^i+k)%13;
+                                  t=0
+     这里需要注意特殊情况，即出现了13. 这时在上面的基础上需加上 dp2[i][t][k],
+                                   9
+      dp1[i][j][kk]= Σ（dp2[i-1][t][k]）;
+                                  t=0
+    
+     同理                    9
+     dp2[i][j][kk]= Σ（dp2[i-1][t][k]）;
+                                 t=0
+     若出现13 则dp2[i][j][kk]=0;
+     初始时 
+     dp2[0][k][k]=1,（0<=k<10）其余的为0.
+     最后对输入的n,只需在此基础上计算即可。当要注意出现 13 的特殊计数。即要加上 dp2[i][j][k]。
+code：
+
+#include<iostream>
+using namespace std;
+int dp1[10][10][13],dp2[10][10][13];
+int ten[11],value[12],n,ans;
+void Init()
+{
+    int i;
+    ten[0]=1;
+    for(i=1;i<=10;i++)
+        ten[i]=ten[i-1]*10;
+}
+void DP()
+{
+     int i,j,k,t,kk;
+     
+     memset(dp1,0,sizeof(dp1));
+     memset(dp2,0,sizeof(dp2));
+     
+     dp2[0][0][0]=1;
+     for(k=0;k<10;k++)
+       dp2[0][k][k]=1;
+     for(i=1;i<10;i++)
+{
+         for(j=0;j<10;j++)
+             for(t=0;t<10;t++)
+                for(k=0;k<13;k++)
+                {
+                   kk=(j*ten[i]+k)%13;
+                   dp1[i][j][kk]+=dp1[i-1][t][k];
+                   if(j==1&&t==3)dp1[i][j][kk]+=dp2[i-1][t][k];
+                   else dp2[i][j][kk]+=dp2[i-1][t][k];
+                }
+}
+             
+}
+int preprocess(int x)
+{
+    int i=0;
+    while(x)
+    {
+        value[i++]=x%10;
+        x/=10;
+    }
+    value[i]=0;
+    return i;
+}
+int main()
+{
+     int i,j,k,len,t,v,flag;
+     Init();
+     DP();
+     while(EOF!=scanf("%d",&n))
+     {     
+           len=preprocess(n+1);
+           v=ans=flag=0;
+           for(i=len;i>=0;i--)
+           {
+              for(j=0;j<value[i];j++)
+              {
+                 for(k=0;k<13;k++)
+                 {
+                    t=(v+k)%13;
+                    if(t==0)
+                    {
+                       ans+=dp1[i][j][k];
+                       if(flag)ans+=dp2[i][j][k];
+                       else if(value[i+1]==1&&j==3) ans+=dp2[i][j][k]; 
+                    }
+                 }
+              }
+              if(value[i+1]==1&&value[i]==3)flag=1;
+                  v+=value[i]*ten[i];;
+           }
+     
+           printf("%d\n",ans);
+     }
+     return 0;
+}
+
+
+hdu1494[跑跑卡丁车](DP) 
+
+n圈，一圈m段，每走一段如果不加速可以获得20%能量，100%能量可以获得一个能量卡，最多拥有两个能量卡；如果已经储存2个能量卡，又有100%的能量，那这100%能量必须减为0；问你最少时间是多少：
+n圈 一圈m段，共有n*m段，把20%算为1，则最多有14；dp[i][j]表示第i段有能量j的最少时间；
+
+31MS 812KB
+
+#include<cstdio>
+#include<cstring>
+#define INF 999999999
+#define MIN(a,b) (a)<(b)?(a):(b)
+int n,m;
+int ai[110],bi[110];
+int dp[10010][17];
+void solve()
+{
+    int i,j,k,sum;
+    sum=n*m;
+    for(i=0;i<=sum;i++) for(j=0;j<=15;j++) dp[i][j]=INF;//初始，把不能的状态赋值为无穷大
+    dp[0][0]=0;//0 0为0
+    for(i=1;i<=sum;i++)
+    {
+        for(j=14;j>=0;j--)//不用能量卡
+            dp[i][j+1]=MIN(dp[i-1][j]+ai[(i-1)%n],dp[i][j+1]);
+        for(j=14;j>=5;j--)//用能量卡
+            dp[i][j-5]=MIN(dp[i][j-5],dp[i-1][j]+bi[(i-1)%n]);
+        dp[i][10]=MIN(dp[i][10],dp[i][15]);//有15个，减为10
+    }
+    k=INF;
+    for(i=0;i<15;i++)//找最小值
+        k=MIN(k,dp[sum][i]);
+    printf("%d\n",k);
+}
+int main()
+{
+    while(scanf("%d%d",&n,&m)!=EOF)
+    {
+        int i,j,k;
+        for(i=0;i<n;i++) scanf("%d",&ai[i]);
+        for(i=0;i<n;i++) scanf("%d",&bi[i]);
+        solve();
+    }
+    return 0;
+}
+
+
+hdu1081[To The Max](DP)
+
+一个n*n的数阵，从中取x*y的矩形，使此矩形的中数和最大，输出最大和；
+ 
+#include<cstdio>
+#include<cstring>
+#define INF 999999999
+int n,m;
+int d[110][110];
+int s[110];
+int main()
+{
+    int i,j,k,t;
+    while(scanf("%d",&n)!=EOF)
+    {
+    for(i=1;i<=n;i++) for(j=1;j<=n;j++) scanf("%d",&d[i][j]);
+    m=-INF;
+    for(i=1;i<=n;i++)
+    {
+        memset(s,0,sizeof(s));
+        for(j=i;j<=n;j++)
+        {
+            t=0;
+            for(k=1;k<=n;k++)
+            {
+                s[k]+=d[j][k];
+                if(t<=0) t=s[k];
+                else t+=s[k];
+                if(t>m) m=t;
+            }
+        }
+    }
+    printf("%d\n",m);
+    }
+    return 0;
+}

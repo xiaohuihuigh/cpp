@@ -1,0 +1,70 @@
+# Validator version: Validator 8.2 20021002 04 October 2nd, 2002 12:15am
+-------------------------***STARTING TO CREATE FILES TO READ AND WRITE***-----------------------
+-------------------------***CREATED LOG FILE !!***-----------------------
+-------------------------***CREATING SECOND TEMP FILE TO WRITE***-----------------------
+-------------------------***SUCESSFULLY OPENED INPUT FILE (estdout.pc2) TO READ***-----------------------
+-------------------------***SUCESSFULLY OPENED ANSWER FILE (out.txt) TO READ***-----------------------
+-------------------------***SUCESSFULLY OPENED RESULT FILE (181XSAM.txt) TO WRITE***-----------------------
+-------------------------***FINISHED CREATING FILES***-----------------------
+-------------------------*** START EXECUTION OF VALIDATOR CARRIAGE ***---------------------------
+-------------------------***WRITING IN TEMP FILE (temp1.txt) TO WRITE***-----------------------
+0
+4
+0
+1
+-------------------------*** END EXECUTION OF VALIDATOR CARRIAGE ***---------------------------
+-------------------------*** START EXECUTION OF VALIDATOR CARRIAGE ***---------------------------
+-------------------------***WRITING IN TEMP FILE (temp2.txt) TO WRITE***-----------------------
+0
+1
+0
+1
+0
+0
+1
+1
+0
+0
+1
+1
+-------------------------*** END EXECUTION OF VALIDATOR CARRIAGE ***---------------------------
+-------------------------*** START EXECUTION OF VALIDATOR CARRIAGE ***---------------------------
+-------------------------***WRITING IN TEMP FILE (inputTEMP1.txt) TO WRITE***-----------------------
+0
+4
+0
+1
+-------------------------*** END EXECUTION OF VALIDATOR CARRIAGE ***---------------------------
+-------------------------*** START EXECUTION OF VALIDATOR CARRIAGE ***---------------------------
+-------------------------***WRITING IN TEMP FILE (inputTEMP2.txt) TO WRITE***-----------------------
+0
+1
+0
+1
+0
+0
+1
+1
+0
+0
+1
+1
+-------------------------*** END EXECUTION OF VALIDATOR CARRIAGE ***---------------------------
+-------------------------***STARTING DIFF ( inputTEMP1.txt inputTEMP2.txt )***-----------------------
+ Team Line is  : 0
+ Answer Line is: 0
+LINES ARE EQUAL. 
+ Team Line is  : 1
+ Answer Line is: 4
+FILES inputTEMP2.txt AND inputTEMP1.txt ARE DIFFERENT
+RESULT :
+THE FILES inputTEMP1.txt & inputTEMP2.txt ARE DIFFERENT AT LINE NO : 2
+
+THE JUDGE'S FILE AT THIS LINE READS: 1
+
+THE TEAM'S  FILE AT THIS LINE READS: 4
+
+TEMINATING DIFF..............
+
+STARTING DIFF IGNORE SPACE CARRIAGE TO VALIDATE THE TWO FILES AND FIND POSSIBILIY OF FORMAT ERROR
+Status diff 0
