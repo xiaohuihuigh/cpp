@@ -1,8 +1,8 @@
 #include<bits/stdc++.h>
 using namespace std;
-int a[100];
+int a[110];
 int l = 100000;
-void cheng(int a[],int t,int& len){
+void cheng(int t,int& len){
     int jin  =0;
     for(int i = 0;i<len;i++){
         a[i ]=a[i]*t+jin;
@@ -19,15 +19,17 @@ int main(){
 
     int lenn = (int)(n*log10(2))+1;
     while(n>10){
-        cheng(a,1024,len);
+        cheng(1024,len);
         n -=10;
-    }
+    }int ch = 1;
     for(int i = 0;i<n;i++){
-        cheng(a,2,len);
-    }
+        ch *=2;
+    }cheng(ch,len);
     a[0]--;
-   printf("%d\n",lenn);
+   printf("%d",lenn);
     for(int i = 99;i>=0;i--){
+    if(i%10+1==10)printf("\n");
         printf("%05d",a[i]);
     }
+    printf("\n");
 }
