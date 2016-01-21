@@ -5,11 +5,11 @@
 using namespace std;
 
 #define lson l,m,rt<<1
-#define rson m+1,r,tr<<1
+#define rson m+1,r,tr<<1|1
 
 const int maxn = 5555;
 int sum[maxn<<2];
-void push_up(int rt){
+void pushup(int rt){
     sum[rt] = sum[rt<<1]+sum[rt<<1|1]};
 }
 void build(int l;int r;int rt){
@@ -22,7 +22,7 @@ void build(int l;int r;int rt){
     build(rson);
     pushup(rt);
 }
-void update(itn p,int add,int l,int r,int rt){
+void update(int p,int add,int l,int r,int rt){
     if(l == r){
         sum[rt]+= add;
         return;
@@ -30,7 +30,7 @@ void update(itn p,int add,int l,int r,int rt){
     int m = (l+r)>>1;
     if(p <= m)update(p,add,lson);
     else update(p,add,rson);
-    push_up(rt);
+    pushup(rt);
 }
 int query(int L,int R,int l,int r,int rt){
     if(L <= l&&r<=R){
@@ -48,15 +48,15 @@ int query(int L,int R,int l,int r,int rt){
 using namespace std;
 
 #define lson l,m,rt<<1
-#define rson m+1,r,tr<<1
+#define rson m+1,r,tr<<1|1
 
 const int maxn = 5555;
 int sum[maxn<<2];
 int col[maxn<<2];
-void push_up(int rt){
+void pushup(int rt){
     sum[rt] = sum[rt<<1]+sum[rt<<1|1]};
 }
-void push_down(int rt,int m){
+void pushdown(int rt,int m){
     if(col[rt]){
         col[rt<<1] = col[rt<<1|1]=col[rt];
         sum[rt<<1] = (m - (m >> 1)) * col[rt];
@@ -79,11 +79,11 @@ void update(int L,int R,int c,int l,int r,int rt){
         sum[rt] = c * (r-l+1);
         return ;
     }
-    push_down(rt,r-l+1);
+    pushdown(rt,r-l+1);
     int m = (l+r)>>1;
     if(L <= m)update(L,R,c,lson);
     if(R > m)update(L,R,c,rson);
-    push_up(rt);
+    pushup(rt);
 
    }
 int main(){
