@@ -101,8 +101,7 @@ int main(){
     }
     return 0;
 }
-/*成段增长，区间求和*/
-#include<cstdio.h>
+#include<cstdio>
 #include<algorithm>
 using namespace std;
 #define lson l,m,rt<<1
@@ -114,11 +113,11 @@ ll sum[maxn<<2];
 void push_up(int rt){
     sum[rt] = sum[rt<<1] + sum[rt<<1|1];
 }
-void push_down(int t,int m){
+void push_down(int rt,int m){
     if(add[rt]){
         add[rt<<1] += add[rt];
         add[rt<<1|1] +=add[rt];
-        sum[rt<<1] += add[rt]*(m-m>>1);
+        sum[rt<<1] += add[rt]*(m-(m>>1));
         sum[rt<<1|1] += add[rt]* (m>>1);
         add[rt] = 0;
     }
@@ -126,13 +125,13 @@ void push_down(int t,int m){
 void build(int l,int r,int rt){
     add[rt] = 0;
     if(l == r){
-        scanf("%d",&sum[rt]);
+        scanf("%lld",&sum[rt]);
         return ;
     }
     int m = (l+r)>>1;
     build(lson);
     build(rson);
-    push_up(rt);
+    pushup(rt);
 }
 void update(int L,int R,int c,int l,int r,int rt){
     if(L <= l&& r <= R){
@@ -150,7 +149,7 @@ ll query(int L,int R,int l,int r,int rt){
     if(L <= l&&r <= R){
         return sum[rt];
     }
-    Push_down(rt,r-l+1);
+    push_down(rt,r-l+1);
     int m = (l+r)>>1;
     ll ret = 0;
     if(L<=m)ret += query(L,R,lson);
@@ -176,3 +175,5 @@ int main(){
     }
     return 0;
 }
+/*成段增长，区间求和*/
+

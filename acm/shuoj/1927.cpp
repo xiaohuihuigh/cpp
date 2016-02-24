@@ -31,46 +31,56 @@ typedef tree<int, int, greater<int>, rb_tree_tag, tree_order_statistics_node_upd
 #define lson(X) ((X)<<1)
 #define rson(X) ((X)<<1|1)
 
-char s[10][10];
 
-ll dp[1000000][2];
+hdu2063
+VI G[555];
+int match[1005];
+bool used[1005];
 
-int isp[21] = {0,0,1,1,0,1,0,1,0,0,0,1,0,1,0,0,0,1,0,1,0};
+bool h(int u) {
+	used[u] = 1;
+	REP(i,G[u].size()) {
+		int v = G[u][i], w = match[v];
+		if(w < 0 || ! used[w] && h(w)) {
+			match[v] = u;
+			match[u] = v;
+			return 1;
+		}
+	}
+	return 0;
+}
 
-int main()
-{
-#ifdef LOCAL
-    freopen("A.in","r",stdin);
-    freopen("A.out","w",stdout);
-#endif
-    ios::sync_with_stdio(false);
-    int n,m;
-    scanf("%d%d",&n,&m);
+int hungary(int n) {
+	int res = 0;
+	CLR(match, -1);
+	REP(v, n) {
+		if(match[v] < 0) {
+			CLR(used, 0);
+			if(h(v)) res ++;
+		}
+		//cout<<res<<" "<<v<<endl;
+	}
+	return res;
+}
+int main (){
+	int T;
+	cin>>T;
+	while(T--){
+		int n;
+		cin>>n;
+		REP(i,555)
+			G[i].clear();/////chu shihua
+		for(int i = 0;i<n;i++)
+		for(int j = 0;j<n;j++){
+			int a;
+			cin>>a;
+			if(a == 1){
+				G[i].PB(j+n);
+			}
+		}
+		printf("%d\n",hungary(n+1));
+	}
 
-    int t = 1;
-    REP(i,m) t *= 10;
-    dp[0][0] = 1;
-    REP(i,n) {
-        scanf("%s", s[i]);
-    }
-    int v = 0;
-    REP(i,n) {
-        REP(j,m) {
-            REP(k,t) if(dp[k][v]) {
-                int first = k / (t/10);
-                int last = k % 10;
-                REP(add,10) if( (s[i][j] == '?' || s[i][j] == '0' + add) && (!i || isp[add+first]) && (!j || isp[add+last])){
-                    int kk = k - first * (t/10);
-                    kk = kk * 10 + add;
-                    dp[kk][v^1] += dp[k][v];
-                }
-                dp[k][v] = 0;
-            }
-            v = v^1;
-        }
-    }
-    ll res = 0;
-    REP(i,t) res += dp[i][v];
-    cout<<res<<endl;
     return 0;
+
 }
