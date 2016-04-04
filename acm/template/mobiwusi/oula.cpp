@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-const int maxn = 100000000;
+const int maxn = 3;
 /*线性筛O(n)时间复杂度内筛出maxn内欧拉函数值*/
 int m[maxn],phi[maxn],p[maxn],pt;//m[i]是i的最小素因数，p是素数，pt是素数个数
 
