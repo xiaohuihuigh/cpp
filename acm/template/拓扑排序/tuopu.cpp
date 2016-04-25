@@ -1,24 +1,4 @@
-//#include<bits/stdc++.h>
-#include <iostream>
-#include <sstream>
-#include <ios>
-#include <iomanip>
-#include <functional>
-#include <algorithm>7
-#include <vector>
-#include <string>
-#include <list>
-#include <queue>
-#include <deque>
-#include <stack>
-#include <set>
-#include <map>
-#include <cstdio>
-#include <cstdlib>
-#include <cmath>
-#include <cstring>
-#include <climits>
-#include <cctype>
+#include<bits/stdc++.h>
 using namespace std;
 #define XINF INT_MAX
 #define INF 0x3FFFFFFF
