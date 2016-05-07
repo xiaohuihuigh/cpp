@@ -1,5 +1,14 @@
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <string>
+#include <algorithm>
+#include<bits/stdc++.h>
+using namespace std;
+
 const int MAXN = 410;
-//在计算a-b时，如果a<b，计算b-a再加上“-”号。
+
 struct bign
 {
     int len, s[MAXN];
