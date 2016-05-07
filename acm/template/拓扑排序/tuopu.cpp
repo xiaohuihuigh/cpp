@@ -4,7 +4,7 @@
 #include <ios>
 #include <iomanip>
 #include <functional>
-#include <algorithm>7
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <list>
@@ -54,12 +54,9 @@ int ans;//已经出来的节点
 int deg[maxn];//入度
 int Ans[maxn];//记录的路径或其他内容
 vector<int> G[maxn];//存图
-
 void addedge(int u,int v){
-    G[u].PB(v);
-	deg[v]++;
+    G[u].PB(v);deg[v]++;
 }
-
 void init(int n){
 	memset(deg,0,sizeof(deg));
 	memset(Ans,0,sizeof(Ans));
@@ -90,17 +87,13 @@ void toposort(int n) {//拓扑排序
 		}
 	}
 }
-
-
 int main()
 {
 	while(cin>>n>>m&&!(n==0&&m==0)){
 		init(n);
 		for(int i=1;i<=m;++i){
-			int a,b;
-			cin>>a>>b;
-			//a++;b++;
-			addedge(a,b);
+			int a,b;cin>>a>>b;
+			//a++;b++;addedge(a,b);
 			}
 		toposort(n);
 		if(ans >= n){
@@ -109,9 +102,6 @@ int main()
 				sum += Ans[i]*i;
 			 }
 			 cout<<sum<<endl;*/
-		}
-		else{
-			cout<<"NO"<<endl;
 		}
 	}
 	return 0;
