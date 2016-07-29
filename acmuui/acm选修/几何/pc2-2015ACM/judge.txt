@@ -1,4 +1,0 @@
-judge1	shuacm1
-judge2	shuacm2
-judge3	shuacm3
-judge4	shuacm4
