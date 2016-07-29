@@ -24,8 +24,8 @@ using namespace std;
 //spfa
 ***************************/
 #define INF 0x3FFFFFFF
-typedef PII pair<int,int>;
-const int MAXN = 100010;
+typedef  pair<int,int> PII;
+const int MAXN = 1010;
 vector<PII> G[MAXN];
 void add_edge(int u,int v,int d){
     G[u].push_back(make_pair(v,d));
@@ -54,8 +54,25 @@ void spfa(int s,int n){
                 if(!vis[y]){
                     q.push(y);
                     vis[y] = 1;
-                }
-            }
-        }
-    }
+                }}}}
+}
+int main()
+{
+	int t,n;
+	//init(n);
+	while(cin>>t>>n&&t&&n)
+	{
+		int u,v,d;
+		init(n);
+		while(t--)
+		{
+			cin>>u>>v>>d;
+			u--,v--;
+			add_edge(u,v,d);
+			add_edge(v,u,d);
+		}
+		spfa(0,n);
+		cout<<dis[n-1]<<endl;
+	}
+	return 0;
 }

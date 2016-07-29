@@ -1,7 +1,7 @@
 
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
-char map[9][9];        //地图最多不超过7行7列,又从(1,1)计算,所以开辟9,9
+char ma[9][9];        //地图最多不超过7行7列,又从(1,1)计算,所以开辟9,9
 int n,m,t,di,dj;       //给定的三个量,以及终点位置
 bool escape;           //标识逃生成功
 int dir[4][2]={{0,-1},{0,1},{1,0},{-1,0}};  //分别表示左、右、下、上四个方向
@@ -16,23 +16,24 @@ void DFS(int si,int sj,int cnt)
         return;
     }
     temp=abs(t-cnt)-(abs(di-si)+abs(dj-sj));     //计算当前到终点的最短路与还需要的时间差,若小于0则路径剪枝
-    if (temp<0 /*|| temp&1*/)           //temp如果是奇数的话也要剪枝
+    if (temp<0 || temp&1)           //temp如果是奇数的话也要剪枝
         return;
     for (i=0;i<4;i++)
     {
-        if (map[si+dir[i][0]][sj+dir[i][1]]!='X')
+        if (ma[si+dir[i][0]][sj+dir[i][1]]!='X')
         {
-            map[si+dir[i][0]][sj+dir[i][1]]='X';  //把当前点刷为X
+            ma[si+dir[i][0]][sj+dir[i][1]]='X';  //把当前点刷为X
             DFS(si+dir[i][0],sj+dir[i][1],cnt+1); //搜索该点
             if (escape)
                 return;
-            map[si+dir[i][0]][sj+dir[i][1]]='.';  //如果搜索不到退出来了,则重新把该点刷为'.'
+            ma[si+dir[i][0]][sj+dir[i][1]]='.';  //如果搜索不到退出来了,则重新把该点刷为'.'
         }
     }
     return ;
 }
 int main()
 {
+    ios::sync_with_stdio(false);
     int i,j,si,sj,wall;
     while (cin>>n>>m>>t)
     {
@@ -45,16 +46,16 @@ int main()
         {
             for (j=1;j<=m;j++)
             {
-                cin>>map[i][j];
-                if (map[i][j]=='S')
+                cin>>ma[i][j];
+                if (ma[i][j]=='S')
                 {
                     si=i,sj=j;
                 }
-                else if (map[i][j]=='D')
+                else if (ma[i][j]=='D')
                 {
                     di=i,dj=j;
                 }
-                else if (map[i][j]=='X')
+                else if (ma[i][j]=='X')
                 {
                     wall++;
                 }
@@ -66,7 +67,7 @@ int main()
             continue;
         }
         escape=0;
-        map[si][sj]='X';      //记得刷为'X'
+        ma[si][sj]='X';      //记得刷为'X'
         DFS(si,sj,0);
         if (escape)
         {

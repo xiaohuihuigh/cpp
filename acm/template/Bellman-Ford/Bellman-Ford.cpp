@@ -20,15 +20,15 @@
 #include <cctype>
 using namespace std;
 /*************************
-//Bellman-FordËã·¨
+//Bellman-Ford
 **************************/
 #define INF 0x3FFFFFFF
-const int MAXN_EDGE = 10010;
-const int MAXN_NODE = 1010;
-int dis[MAXN_NODE];
-int From[MAXN_EDGE];
-int To[MAXN_EDGE];
-int w[MAXN_EDGE];
+const int MAXN = 10010;
+const int MAXN = 1010;
+int dis[MAXN];
+int From[MAXN];
+int To[MAXN];
+int w[MAXN];
 int tot;
 void init(int n){
     tot = 0;

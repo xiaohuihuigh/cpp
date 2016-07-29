@@ -1,30 +1,11 @@
-#include <iostream>
-#include <sstream>
-#include <ios>
-#include <iomanip>
-#include <functional>
-#include <algorithm>
-#include <vector>
-#include <string>
-#include <list>
-#include <queue>
-#include <deque>
-#include <stack>
-#include <set>
-#include <map>
-#include <cstdio>
-#include <cstdlib>
-#include <cmath>
-#include <cstring>
-#include <climits>
-#include <cctype>
+#include<bits/stdc++.h>
 using namespace std;
 
 /***************************
 //spfa
 ***************************/
 #define INF 0x3FFFFFFF
-typedef PII pair<int,int>;
+typedef  pair<int,int> PII;
 const int MAXN = 100010;
 vector<PII> G[MAXN];
 void add_edge(int u,int v,int d){
@@ -59,3 +40,20 @@ void spfa(int s,int n){
         }
     }
 }
+int main(){
+    int n,m;
+    while(cin>>n>>m&&n&&m){
+        int u,v,d;
+        init(n);
+        while(m--){
+            cin>>u>>v>>d;
+            u--,v--;
+            add_edge(u,v,d);
+            add_edge(v,u,d);
+        }
+        spfa(0,n);
+        cout<<dis[n-1]<<endl;
+    }
+}
+
+

@@ -1,222 +1,61 @@
 
-//拓扑排序
-#include <iostream>
-#include <sstream>
-#include <ios>
-#include <iomanip>
-#include <functional>
-#include <algorithm>
-#include <vector>
-#include <string>
-#include <list>
-#include <queue>
-#include <deque>
-#include <stack>
-#include <set>
-#include <map>
-#include <cstdio>
-#include <cstdlib>
-#include <cmath>
-#include <cstring>
-#include <climits>
-#include <cctype>
-#define INF 0x3f3f3f3f
-#define MP(X,Y) make_pair(X,Y)
-#define PB(X) push_back(X)
-#define REP(X,N) for(int X=0;X<N;X++)
-#define REP2(X,L,R) for(int X=L;X<=R;X++)
-#define DEP(X,R,L) for(int X=R;X>=L;X--)
-#define CLR(A,X) memset(A,X,sizeof(A))
-#define IT iterator
-#define M_PI 3.14159265358979323846
-#define _ ios_base::sync_with_stdio(0);cin.tie(0);
-#define X first
-#define Y second
-#define MAX_V 10101
-#define maxn 504
-#define lowbit(X) (X & (-X))
-#include<ctime>
+#include<iostream>
+#include<vector>
+#include<bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-typedef pair<int,int>PII;
-typedef pair<PII,int>PPI;
+const int N = 505;
+vector<int>g[N];//邻接表存储
+int vis[N],topo[N],cnt;
 
-/*
-
-int t;
-int c[maxn];
-int Ans[maxn];
-int G[maxn][maxn];
-int n,m;
-
-bool dfs(int v){
-	c[v]=-1;//表示正在访问
-	for(int i=0;i<n;++i)if(G[v][i]){
-		if(c[i]==-1)return false;
-		if(c[i]==0 && !dfs(i))return false;
-	}
-	c[v]=1;//访问结束
-	Ans[--t]=v+1;
-	return 1;
-}
-bool toposort(int n){
-	t=n;
-	memset(c,0,sizeof(c));
-	for(int i=0;i<n;++i)if(!c[i]){
-		if(!dfs(i))return false;
-	}
-	return true;
-}
-int main()
+bool dfs(int u)
 {
-	while(cin>>n>>m&&n&&m){
-        memset(G,0,sizeof(G));
-	for(int i=0;i<m;++i){
-		int a,b;
-		cin>>a>>b;
-		//a--;b--;
-		G[a][b]=1;
-	}
-	if(toposort(n)){
-		cout<<"YES"<<endl;
-	 	for(int i=0;i<n;++i){
-		 	cout<<Ans[i]<<" ";
-		 }
-		 //cout<<endl;
-	}else{
-		cout<<"NO"<<endl;
-	}
-	}
-
-
-	return 0;
-}*//*
-int n,m;
-int deg[maxn];
-int G[maxn][maxn];
-int ans;
-int Ans[maxn];
-void toposort(int n) {//拓扑排序
-    int k = 0;
-    ans= 0;
-    for (int i = 1; i <= n; i++) {//共进行|G.V|次操作
-        for (int j = 1; j <= n; j++) {//遍历所有的顶点  找入度为0的
-            if (deg[j] == 0) {//找到
-                ans++;
-                Ans[i] = j;
-                //printf("%d%c", j, i == n ? '\n' : ' ');//输出
-                deg[j]--;//去掉这个点  让deg[j] = -1;
-                k = j;//记录这个点
-                break;//跳出循环
-            }
+    vis[u] = -1;//-1用来表示顶点u正在访问
+    for(int i = g[u].size()-1 ; i >= 0 ; i --)
+    {
+        if(vis[g[u][i]] == -1)//表示这个点进入了两次，肯定出现了环
+            return false;
+        else if(vis[g[u][i]] == 0)
+        {
+            dfs(g[u][i]);
         }
-        for (int j = 1; j <= n; j++)//遍历所有的点
-            if (G[k][j] == true) {//找被此点打败过的点
-                G[k][j] = false;//标记为找到过
-                deg[j]--;//让这个点的入度-1
-            }
+    }
+    vis[u] = 1;
+    topo[cnt++] = u;//放到结果数组里，输出的时候记得倒序输出，（回溯的原因）
+    return true;
+}
+
+bool toposort(int n)
+{
+    memset(vis,0,sizeof(vis));
+    cnt = 0;
+    for(int i  = n ; i >=1 ; i --)
+    {
+        if(!vis[i])
+        {
+            if(!dfs(i)) return false;//huan
+        }
+    }
+    return true;
+}
+int main(){
+    int m,n;
+    while(cin>>m>>n){
+    //建图
+        for(int i = 0;i<n;i++){
+            int a,b;
+            cin>>a>>b;
+            g[a].push_back(b);
+        }
+        for(int i = 1;i<=m;i++){
+            sort(g[i].begin(),g[i].end());
+        }
+        //生成深度优先搜索树
+        toposort(m);
+        for(int i = m-1;i>=0;i--)i == m-1?cout<<topo[i]:cout<<" "<<topo[i];
+        cout<<endl;
     }
 }
 
-int main()
-{
-	while(cin>>n>>m){
-        memset(G,0,sizeof(G));
-        memset(deg,0,sizeof(deg));
-	for(int i=1;i<=m;++i){
-		int a,b;
-		cin>>a>>b;
-		//a++;b++;
-		if(G[a][b] == 0){//要注意判重，否则出错
-		deg[b]++;
-		//a--;b--;
-		G[a][b]=1;
-		}
-	}
-	toposort(n);
-	if(ans >= n){
-		//cout<<"YES"<<endl;
-	 	for(int i=1;i<=n;++i){
-                if(i!= 1)cout<<" ";
-		 	cout<<Ans[i];
-		 }
-		 cout<<endl;
-	}else{
-		//cout<<"NO"<<endl;
-	}
-	}
 
 
-	return 0;
-}
-*/
-//const int maxn = 100010;
-int n,m;
-int deg[maxn];//入度
-int ans;//已经出来的节点
-int Ans[maxn];//记录的路径或其他内容
-vector<int> G[maxn];//存图
 
-void addedge(int u,int v){
-    G[u].PB(v);
-	deg[v]++;
-}
-
-void init(int n){
-	memset(deg,0,sizeof(deg));
-	memset(Ans,0,sizeof(Ans));
-    for(int i=0;i<=n;i++){
-        G[i].clear();
-    }
-}
-
-void toposort(int n) {//拓扑排序
-	priority_queue<int ,vector<int>,greater<int> >Q;
-	//queue<int> Q;
-    ans= 0;
-	int k = 0;
-	for (int i = 1; i <= n; i++) {
-		 if (deg[i] == 0) {//找到
-			Q.push(i);
-		 }
-	}
-	while(!Q.empty()){
-		int top = Q.top();Q.pop();
-		ans++;
-		Ans[k++] = top;
-		deg[top]--;
-		for (int j = 0; j < G[top].size(); j++){//遍历所有的点
-			int t = G[top][j];
-			deg[t]--;//让这个点的入度-1
-		if(deg[t] == 0)
-			Q.push(t);
-		}
-	}
-}
-
-
-int main()
-{
-	while(cin>>n>>m){
-		init(n);
-		for(int i=1;i<=m;++i){
-			int a,b;
-			cin>>a>>b;
-			//a++;b++;
-			addedge(a,b);
-			}
-		toposort(n);
-		if(ans >= n){
-			//cout<<"YES"<<endl;
-			for(int i=0;i<n;++i){
-				if(i!=0)cout<<" ";
-				cout<<Ans[i];
-			 }
-			 cout<<endl;
-		}
-		else{
-			//cout<<"NO"<<endl;
-		}
-	}
-	return 0;
-}
