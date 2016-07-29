@@ -16,7 +16,7 @@ void push_down(int rt,int m){
     if(add[rt]){
         add[rt<<1] += add[rt];
         add[rt<<1|1] +=add[rt];
-        sum[rt<<1] += add[rt]*(m-m>>1);
+        sum[rt<<1] += add[rt]*(m-(m>>1));
         sum[rt<<1|1] += add[rt]* (m>>1);
         add[rt] = 0;
     }
@@ -24,7 +24,7 @@ void push_down(int rt,int m){
 void build(int l,int r,int rt){
     add[rt] = 0;
     if(l == r){
-        scanf("%d",&sum[rt]);
+        scanf("%I64d",&sum[rt]);
         return ;
     }
     int m = (l+r)>>1;
@@ -53,6 +53,10 @@ ll query(int L,int R,int l,int r,int rt){
     ll ret = 0;
     if(L<=m)ret += query(L,R,lson);
     if(m<R) ret += query(L,R,rson);
+//    else{
+//        ret+=query(L,m,lson);
+//        ret+=query(m+1,R,rson);
+//    }
     return ret;
 }
 int main(){
@@ -65,7 +69,7 @@ int main(){
         scanf("%s",op);
         if(op[0] == 'Q'){
             scanf("%d%d",&a,&b);
-            printf("%lld\n",query(a,b,1,N,1));
+            printf("%I64d\n",query(a,b,1,N,1));
         }
         else{
             scanf("%d%d%d",&a,&b,&c);
