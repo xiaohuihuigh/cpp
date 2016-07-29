@@ -5,14 +5,14 @@
 using namespace std;
 
 #define lson l,m,rt<<1
-#define rson m+1,r,tr<<1|1
+#define rson m+1,r,rt<<1|1
 
 const int maxn = 5555;
 int sum[maxn<<2];
 void pushup(int rt){
-    sum[rt] = sum[rt<<1]+sum[rt<<1|1]};
+    sum[rt] = sum[rt<<1]+sum[rt<<1|1];
 }
-void build(int l;int r;int rt){
+void build(int l,int r,int rt){
     if(l==r){
         scanf("%d",&sum[rt]);
         return;
@@ -42,6 +42,7 @@ int query(int L,int R,int l,int r,int rt){
     if(R>m)ret += query(L,R,rson);
     return ret;
 }
+
 /*成段更新，单点求值*/
  #include <stdio.h>
  # include<algorithm>
