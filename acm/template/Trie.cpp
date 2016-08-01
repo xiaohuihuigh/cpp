@@ -50,9 +50,9 @@ int findTrie(char *s){
     	int id = s[i] - 'a';
     	p = p->next[id];
     	if(p == NULL)return 0;
-//    	if(p->v == -1) return 1;//å­—ç¬¦é›†ä¸­å·²æœ‰ä¸²æ˜¯æ­¤ä¸²çš„å‰ç¼€
+//    	if(p->v == -1) return 1;//×Ö·û¼¯ÖÐÒÑÓÐ´®ÊÇ´Ë´®µÄÇ°×º
     }
-    return p->v;//æ­¤ä¸²æ˜¯å­—ç¬¦é›†ä¸­æŸä¸²çš„å‰ç¼€
+    return p->v;//´Ë´®ÊÇ×Ö·û¼¯ÖÐÄ³´®µÄÇ°×º
 }
 int delTire(Trie T){
     int i;

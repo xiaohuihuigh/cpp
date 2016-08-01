@@ -17,12 +17,18 @@ using namespace std;
 #define in2(x,y) scanf("%d%d",&x,&y)
 #define in3(x,y,z) scanf("%d%d%d",&x,&y,&z)
 #define out1(x)  prllf("%lld\n",x)
-#define max_node 26
+#define max_node 10
 typedef long long ll;
 typedef vector<ll> VI;
 typedef vector<VI> VVI;
-const int maxn = 55;
-
+const int maxn = 10000;
+struct phone{
+    int len;
+    char s[11];
+    bool operator<(const struct phone s)const {
+        return len<s.len;
+    }
+}P[maxn];
 typedef struct node{
     node *next[max_node];
     int v;
@@ -31,28 +37,30 @@ typedef struct node{
         v = 0;
     }
 }node,*Trie;
-node *root = new(node);
-void creatTire(char *s){
+node *root;
+bool creatTire(char *s){
     int len = strlen(s);
     Trie p = root;
     rep(i,len){
-    	int id = s[i] - 'a';
+    	int id = s[i] - '0';
     	if(p->next[id] == NULL) p->next[id] = new node();
     	p = p->next[id];
-    	p->v++;
+    	if(p->v == -1)return true;
+//    	p->v++;
     }
-//    p->v = -1;
+    p->v = -1;
+    return false;
 }
 int findTrie(char *s){
     int len = strlen(s);
     Trie p = root,q;
     rep(i,len){
-    	int id = s[i] - 'a';
+    	int id = s[i] - '0';
     	p = p->next[id];
     	if(p == NULL)return 0;
-//    	if(p->v == -1) return 1;//å­—ç¬¦é›†ä¸­å·²æœ‰ä¸²æ˜¯æ­¤ä¸²çš„å‰ç¼€
+//    	if(p->v == -1) return 1;//×Ö·û¼¯ÖÐÒÑÓÐ´®ÊÇ´Ë´®µÄÇ°×º
     }
-    return p->v;//æ­¤ä¸²æ˜¯å­—ç¬¦é›†ä¸­æŸä¸²çš„å‰ç¼€
+    return p->v;//´Ë´®ÊÇ×Ö·û¼¯ÖÐÄ³´®µÄÇ°×º
 }
 int delTire(Trie T){
     int i;
@@ -66,32 +74,48 @@ int delTire(Trie T){
 
 
 int main(){
-    char str[20];
-    int i;
-    while(gets(str),strcmp(str,"")){
-        creatTire(str);
-    }
-    while(gets(str)!=NULL){
-        printf("%d\n",findTrie(str));
-    }
+    int T;
+    in(T);
+    while(T--){
+        root = new node();
+        int n;in(n);
+        char s[15];
+        rep(i,n){
+            scanf("%s",s);
+            int len = strlen(s);
+            P[i].len = len;
+//            P[i].s = s;
+            strcpy(P[i].s,s);
+        }
+        sort(P,P+n);
+        int yn = 0;
+        rep(i,n){
+            if(creatTire(P[i].s)){
+                yn = 1;
+                break;
+            }
+        }
+        if(yn == 1)printf("NO\n");
+        else printf("YES\n");
+        delTire(root);
+    }n
     return 0;
-//    delTire(root);
 }
-/*
-banana
-band
-bee
-absolute
-acm
 
-ba
-b
-band
-abc
-
-
-2
+/**
 3
-1
-0
+3
+911
+97625999
+91125426
+3
+911
+97625999
+91125426
+5
+113
+12340
+123440
+12345
+98346
 */
